@@ -101,3 +101,10 @@ def utilitiescolor():
 @app.route('/utilities-other', methods=["GET"])
 def utilitiesother():
     return render_template("utilities-other.html")
+
+@app.route('/getData', methods=["GET"])
+def dataFromFB():
+    if "username" in session:
+        return getPlayerStats()
+    else:
+        return render_template('login.html')
