@@ -1,13 +1,18 @@
 from flask import render_template, request, redirect, url_for, session
 from app import app
 from model import *
+from datetime import datetime
 
 @app.route('/', methods=["GET"])
 def home():
+    return render_template('index.html')
+    '''
     if "username" in session:
         return render_template('index.html')
     else:
         return render_template('login.html')
+    '''
+    
 
 # Register new user
 @app.route('/register', methods=["GET", "POST"])
@@ -108,3 +113,24 @@ def dataFromFB():
         return getPlayerStats()
     else:
         return render_template('login.html')
+def initialize_day(session):
+    keys = list(session.keys())
+    keys -= 'timestamp'
+    d = {}
+    for key in keys:
+        d[key] = [] 
+    return d
+
+    
+@app.route('/getSessions', methods=["GET"])
+def getSessionsPoint():
+    sessions = getSessions() 
+    for key in list(sessions):
+        d = key.strftime("%m/%d/%Y")
+        sessions[d] = sessions[key]
+        del sessions[key]
+    return jsonify(sessions)
+@app.route('/getLevels', methods=["GET"])
+def getLevelsPoint():
+    levels = getLevels() 
+    return jsonify(levels)
